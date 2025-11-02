@@ -1,0 +1,34 @@
+{
+    "name": "mautic-dashboard-backend",
+    "version": "1.0.0",
+    "description": "Backend API for centralized Mautic dashboard",
+    "type": "module",
+    "main": "src/server.js",
+    "scripts": {
+        "dev": "nodemon src/server.js",
+        "start": "node src/server.js",
+        "prisma:generate": "prisma generate",
+        "prisma:migrate": "prisma migrate dev",
+        "prisma:studio": "prisma studio"
+    },
+    "keywords": [
+        "mautic",
+        "dashboard",
+        "api"
+    ],
+    "author": "",
+    "license": "MIT",
+    "dependencies": {
+        "@prisma/client": "^5.7.0",
+        "axios": "^1.6.2",
+        "bcryptjs": "^2.4.3",
+        "cors": "^2.8.5",
+        "dotenv": "^16.3.1",
+        "express": "^4.18.2",
+        "node-cron": "^3.0.3"
+    },
+    "devDependencies": {
+        "nodemon": "^3.0.2",
+        "prisma": "^5.7.0"
+    }
+}

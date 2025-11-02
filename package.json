@@ -1,0 +1,21 @@
+{
+    "name": "mautic-dashboard",
+    "version": "1.0.0",
+    "description": "Centralized dashboard for multiple Mautic instances",
+    "scripts": {
+        "setup": "./setup.sh",
+        "dev:backend": "cd backend && npm run dev",
+        "dev:frontend": "cd frontend && npm run dev",
+        "install:all": "cd backend && npm install && cd ../frontend && npm install",
+        "build:backend": "cd backend && npm install --production",
+        "build:frontend": "cd frontend && npm run build"
+    },
+    "keywords": [
+        "mautic",
+        "dashboard",
+        "analytics",
+        "marketing-automation"
+    ],
+    "author": "",
+    "license": "MIT"
+}

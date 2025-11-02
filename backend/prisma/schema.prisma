@@ -1,0 +1,119 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "mysql"
+    url      = env("DATABASE_URL")
+}
+
+model MauticClient {
+    id             Int       @id @default(autoincrement())
+    clientName     String    @db.VarChar(255)
+    baseUrl        String    @db.VarChar(255)
+    clientId       String    @db.VarChar(255)
+    clientSecret   String    @db.VarChar(255)
+    accessToken    String?   @db.Text
+    refreshToken   String?   @db.Text
+    tokenExpiresAt DateTime?
+    isActive       Boolean   @default(true)
+    lastSyncAt     DateTime?
+    createdAt      DateTime  @default(now())
+    updatedAt      DateTime  @updatedAt
+
+    contacts   Contact[]
+    campaigns  Campaign[]
+    emailStats EmailStat[]
+    segments   Segment[]
+
+    @@map("mautic_clients")
+}
+
+model Contact {
+    id              Int       @id @default(autoincrement())
+    clientId        Int
+    mauticContactId Int
+    firstName       String?   @db.VarChar(255)
+    lastName        String?   @db.VarChar(255)
+    email           String?   @db.VarChar(255)
+    phone           String?   @db.VarChar(50)
+    company         String?   @db.VarChar(255)
+    city            String?   @db.VarChar(100)
+    country         String?   @db.VarChar(100)
+    lastActive      DateTime?
+    points          Int?      @default(0)
+    createdAt       DateTime  @default(now())
+    updatedAt       DateTime  @updatedAt
+
+    client MauticClient @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+    @@unique([clientId, mauticContactId])
+    @@index([clientId])
+    @@map("contacts")
+}
+
+model Campaign {
+    id               Int      @id @default(autoincrement())
+    clientId         Int
+    mauticCampaignId Int
+    name             String   @db.VarChar(255)
+    description      String?  @db.Text
+    isPublished      Boolean  @default(false)
+    totalContacts    Int      @default(0)
+    createdAt        DateTime @default(now())
+    updatedAt        DateTime @updatedAt
+
+    client MauticClient @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+    @@unique([clientId, mauticCampaignId])
+    @@index([clientId])
+    @@map("campaigns")
+}
+
+model EmailStat {
+    id            Int       @id @default(autoincrement())
+    clientId      Int
+    mauticEmailId Int
+    subject       String?   @db.VarChar(500)
+    name          String?   @db.VarChar(255)
+    sentCount     Int       @default(0)
+    readCount     Int       @default(0)
+    clickedCount  Int       @default(0)
+    failedCount   Int       @default(0)
+    openRate      Float     @default(0)
+    clickRate     Float     @default(0)
+    publishedAt   DateTime?
+    createdAt     DateTime  @default(now())
+    updatedAt     DateTime  @updatedAt
+
+    client MauticClient @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+    @@unique([clientId, mauticEmailId])
+    @@index([clientId])
+    @@map("email_stats")
+}
+
+model Segment {
+    id              Int       @id @default(autoincrement())
+    clientId        Int
+    mauticSegmentId Int
+    name            String    @db.VarChar(255)
+    description     String?   @db.Text
+    isPublished     Boolean   @default(false)
+    isGlobal        Boolean   @default(false)
+    contactCount    Int       @default(0)
+    createdBy       String?   @db.VarChar(255)
+    dateAdded       DateTime?
+    dateModified    DateTime?
+    createdAt       DateTime  @default(now())
+    updatedAt       DateTime  @updatedAt
+
+    client MauticClient @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+    @@unique([clientId, mauticSegmentId])
+    @@index([clientId])
+    @@map("segments")
+}
